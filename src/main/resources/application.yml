@@ -1,0 +1,5 @@
+#yml配置文件：后面需要空格
+spring:
+  profiles:
+    #表示启动哪个环境的配置
+    active: dev

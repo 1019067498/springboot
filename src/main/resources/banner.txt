@@ -1,0 +1,17 @@
+${AnsiColor.BRIGHT_YELLOW}
+NNNNNNNN        NNNNNNNN      OOOOOOOOO             BBBBBBBBBBBBBBBBB    UUUUUUUU     UUUUUUUU        GGGGGGGGGGGGG
+N:::::::N       N::::::N    OO:::::::::OO           B::::::::::::::::B   U::::::U     U::::::U     GGG::::::::::::G
+N::::::::N      N::::::N  OO:::::::::::::OO         B::::::BBBBBB:::::B  U::::::U     U::::::U   GG:::::::::::::::G
+N:::::::::N     N::::::N O:::::::OOO:::::::O        BB:::::B     B:::::B UU:::::U     U:::::UU  G:::::GGGGGGGG::::G
+N::::::::::N    N::::::N O::::::O   O::::::O          B::::B     B:::::B  U:::::U     U:::::U  G:::::G       GGGGGG
+N:::::::::::N   N::::::N O:::::O     O:::::O          B::::B     B:::::B  U:::::D     D:::::U G:::::G
+N:::::::N::::N  N::::::N O:::::O     O:::::O          B::::BBBBBB:::::B   U:::::D     D:::::U G:::::G
+N::::::N N::::N N::::::N O:::::O     O:::::O          B:::::::::::::BB    U:::::D     D:::::U G:::::G    GGGGGGGGGG
+N::::::N  N::::N:::::::N O:::::O     O:::::O          B::::BBBBBB:::::B   U:::::D     D:::::U G:::::G    G::::::::G
+N::::::N   N:::::::::::N O:::::O     O:::::O          B::::B     B:::::B  U:::::D     D:::::U G:::::G    GGGGG::::G
+N::::::N    N::::::::::N O:::::O     O:::::O          B::::B     B:::::B  U:::::D     D:::::U G:::::G        G::::G
+N::::::N     N:::::::::N O::::::O   O::::::O          B::::B     B:::::B  U::::::U   U::::::U  G:::::G       G::::G
+N::::::N      N::::::::N O:::::::OOO:::::::O        BB:::::BBBBBB::::::B  U:::::::UUU:::::::U   G:::::GGGGGGGG::::G
+N::::::N       N:::::::N  OO:::::::::::::OO         B:::::::::::::::::B    UU:::::::::::::UU     GG:::::::::::::::G
+N::::::N        N::::::N    OO:::::::::OO           B::::::::::::::::B       UU:::::::::UU         GGG::::::GGG:::G
+NNNNNNNN         NNNNNNN      OOOOOOOOO             BBBBBBBBBBBBBBBBB          UUUUUUUUU              GGGGGG   GGGG

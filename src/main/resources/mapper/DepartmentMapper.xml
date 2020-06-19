@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.mapper.DepartmentMapper">
+    <resultMap id="deptMap" type="com.example.demo.dto.Department">
+        <id property="id" column="id" javaType="java.lang.Integer"></id>
+        <result property="deptName" column="dept_name" javaType="java.lang.String"></result>
+        <!-- 此处的id其实是部门的id，相当于再通过部门的id查询与此关联的员工 -->
+        <!--javaType指定的是user对象的属性的类型，而ofType指定的是映射到list集合属性中pojo的类型-->
+        <!--一对多(collection) 一对一(association)-->
+        <!-- <collection property="users" column="id" ofType="com.example.demo.dto.User" select="com.example.demo.mapper.UserMapper.selectUserByDept">
+            <id column="userId" property="userId"/>
+            <result column="userName" property="userName"/>
+        </collection> -->
+        <collection property="users" column="id" ofType="com.example.demo.dto.User">
+            <id property="userId" column="userId" javaType="java.lang.Integer"></id>
+            <result property="userName" column="userName" javaType="java.lang.String"></result>
+        </collection>
+    </resultMap>
+
+    <!-- <select id="selectDeptAndUser" parameterType="int" resultMap="deptMap">
+        select * from department d where d.id = #{id}
+    </select> -->
+    <select id="selectDeptAndUser" parameterType="int" resultMap="deptMap">
+        select d.id,d.dept_name,u.userId,u.userName from department d left join t_user u on d.id = u.dept_id where d.id =
+         #{id}
+    </select>
+</mapper>

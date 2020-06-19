@@ -1,0 +1,76 @@
+#yml配置文件：后面需要空格
+server:
+  tomcat:
+    uri-encoding: UTF-8
+    max-connections: 500
+    min-spare-threads: 25
+    max-threads: 300
+    accept-count: 200
+  port: 8081
+  servlet:
+    #http://localhost:8080/demo/hello
+    context-path: /demo
+spring:
+  #从数据库读日期少了8小时，加上jackson
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  datasource:
+    username: root
+    password: root
+    #向数据库mysql中插入中文数据乱码,在连接后加characterEncoding=UTF-8
+    #向数据库写日期少了8小时，加serverTimezone=Asia/Shanghai就好了
+    url: jdbc:mysql://127.0.0.1:3306/mytest?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.jdbc.Driver
+    hikari:
+      idle-timeout: 60000
+      maximum-pool-size: 30
+      minimum-idle: 10
+  devtools:
+    #热部署生效,生产环境不要开启这个功能，如果用java -jar启动，springBoot是不会进行热部署的
+    restart:
+      #非静态代码更改时是否重新启动服务器
+      enabled: true
+      #禁用浏览器中的这些路径中少数文件的自动重新加载
+      exclude: static/**,public/**
+      #设可能有少量文件不在classpath中，但您仍然可能需要查看这些addtional文件/路径以重新加载应用程序
+      additional-paths: script/**
+      #同样，如果您想保留这些默认值并添加其他排除项
+      additional-exclude: styles/**
+  #没有active属性，只是单纯表示这个是prod
+  profiles: prod
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  #对应实体类的路径
+  type-aliases-package: com.example.demo.dto
+  configuration:
+    #表字段下划线自动转dto驼峰，配置了这里就不用手动配置mapper.xml中结果集中的字段与属性配置
+    map-underscore-to-camel-case: true
+
+logging:
+  pattern:
+    #%d{yyyy-MM-dd HH:mm:ss, SSS} : 日志生产时间,输出到毫秒的时间
+    #%-5level : 输出日志级别，-5表示左对齐并且固定输出5个字符，如果不足在右边补0
+    #%c : logger的名称(%logger)
+    #%t : 输出当前线程名称
+    #%p : 日志输出格式
+    #%m : 日志内容，即 logger.info("message")
+    #%n : 换行符
+    #%C : Java类名(%F)
+    #%L : 行号
+    #%M : 方法名
+    #%l : 输出语句所在的行数, 包括类名、方法名、文件名、行数
+    console: "%d - %msg%n"
+  #只打印指定目录下的info级别的日志
+  level:
+    #指定路径下的日志级别
+    com.example.demo: info
+
+  #file:指定日志文件名称，就是给默认的日志spring.log重新起个名字
+  #path指定日志存放路径，默认为spring.log文件
+  #path:
+  file:
+    #指定日志文件名称，就是给默认的日志spring.log重新起个名字
+    name:
+    path:
+

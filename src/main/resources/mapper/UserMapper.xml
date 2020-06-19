@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.mapper.UserMapper">
+    <!--//自定义返回结果集-->
+    <resultMap id="userMap" type="com.example.demo.dto.User">
+        <id property="userId" column="userId" javaType="java.lang.Integer"></id>
+        <result property="userName" column="userName" javaType="java.lang.String"></result>
+        <result property="password" column="password" javaType="java.lang.String"></result>
+        <result property="phone" column="phone" javaType="java.lang.String"></result>
+        <result property="updateDate" column="updateDate" javaType="java.util.Date"></result>
+        <result property="myTest" column="my_test" javaType="java.lang.String"></result>
+        <result property="version" column="version" javaType="java.lang.Integer"></result>
+        <result property="balance" column="balance" javaType="java.math.BigDecimal"></result>
+        <result property="deptId" column="dept_id" javaType="java.lang.Integer"></result>
+        <!--数据库中字段的下划线要转换成dto的驼峰命名-->
+        <!--<result column="right_id" property="rightId" jdbcType="INTEGER" />-->
+    </resultMap>
+    <!--JDBCType和javaType 类型对照 -->
+    <!--
+    <result property="FLD_NUMBER" column="FLD_NUMBER"  javaType="double" jdbcType="NUMERIC"/>  
+    <result property="FLD_VARCHAR" column="FLD_VARCHAR" javaType="string" jdbcType="VARCHAR"/> 
+    <result property="FLD_DATE" column="FLD_DATE" javaType="java.sql.Date" jdbcType="DATE"/>
+    显示年月日时分秒，需要配合dto中注解@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    <result property="updateDate" column="updateDate" javaType="java.util.Date" jdbcType="datetime"></result>  
+    <result property="FLD_INTEGER" column="FLD_INTEGER"  javaType="int" jdbcType="INTEGER"/>  
+    <result property="FLD_DOUBLE" column="FLD_DOUBLE"  javaType="double" jdbcType="DOUBLE"/>  
+    <result property="FLD_LONG" column="FLD_LONG"  javaType="long" jdbcType="INTEGER"/>  
+    <result property="FLD_CHAR" column="FLD_CHAR"  javaType="string" jdbcType="CHAR"/>  
+    <result property="FLD_BLOB" column="FLD_BLOB"  javaType="[B" jdbcType="BLOB" />  
+    <result property="FLD_CLOB" column="FLD_CLOB"  javaType="string" jdbcType="CLOB"/>  
+    <result property="FLD_FLOAT" column="FLD_FLOAT"  javaType="float" jdbcType="FLOAT"/> 
+    <result property="FLD_TIMESTAMP" column="FLD_TIMESTAMP"  javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>  
+    -->
+    <resultMap id="userMap1" type="com.example.demo.dto.User">
+        <id property="userId" column="userId" javaType="java.lang.Integer"></id>
+        <result property="userName" column="userName" javaType="java.lang.String"></result>
+    </resultMap>
+    <sql id="column">
+        a.userId as "userId",
+        a.userName as "userName",
+        a.password as "password",
+        a.phone as "phone",
+        a.updateDate as "updateDate",
+        a.version as "version",
+        a.balance as "balance"
+    </sql>
+
+    <!--useGeneratedKeys="true" keyProperty="id"-->
+    <insert id="insert" parameterType="com.example.demo.dto.User" useGeneratedKeys="true" keyProperty="userId">
+        insert into t_user (userName,password,phone,updateDate) values (        #{userName, jdbcType = VARCHAR}        ,
+               #{password, jdbcType = VARCHAR}        ,        #{phone, jdbcType = VARCHAR}       ,now()  )
+    </insert>
+
+    <delete id="deleteUser" parameterType="int">
+        delete from t_user where userId=        #{userId}
+    </delete>
+
+    <select id="selectById" parameterType="int" resultMap="userMap">
+        select * from t_user where userId=        #{userId}
+    </select>
+
+    <update id="updateUser" parameterType="com.example.demo.dto.User">
+        update t_user set userName=        #{userName}        ,password=        #{password}        ,phone=        #{phone}
+           ,updateDate=  now()
+          where userId=        #{userId}
+    </update>
+
+    <select id="selectAll" resultMap="userMap">
+        select <include refid="column"/> from t_user a
+
+
+    </select>
+
+    <update id="updateUserWithLock" parameterType="com.example.demo.dto.User">
+        update t_user set userName=        #{userName}        ,password=        #{password}        ,phone=        #{phone}
+           ,updateDate=     #{updateDate}     ,version=version+1
+          where userId=        #{userId}     and version=    #{version}
+    </update>
+
+    <update id="moveOut">
+        update t_user
+        set balance = balance -    #{money }
+        where userId=    #{userId}
+    </update>
+
+    <update id="moveIn">
+        update t_user
+        set balance = balance +    #{money }
+        where userId=    #{userId}
+    </update>
+
+    <select id="selectUserByDept" resultMap="userMap1">
+        select a.userID,a.userName from t_user a where a.dept_id =   #{id}
+    </select>
+</mapper>

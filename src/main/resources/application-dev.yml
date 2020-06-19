@@ -1,0 +1,163 @@
+#yml配置文件：后面需要空格
+server:
+  tomcat:
+    uri-encoding: UTF-8
+    max-connections: 500
+    min-spare-threads: 25
+    max-threads: 300
+    accept-count: 200
+  port: 8080
+  servlet:
+    #http://localhost:8080/demo/hello
+    context-path: /demo
+
+spring:
+  http:
+  #从数据库读日期少了8小时，加上jackson
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+  datasource:
+    username: root
+    password: root
+    #向数据库mysql中插入中文数据乱码,在连接后加characterEncoding=UTF-8
+    #向数据库写日期少了8小时，加serverTimezone=Asia/Shanghai就好了
+    #如果不设置useSSL=false显式选项，则必须建立默认的SSL连接,启动会警告
+    #Establishing SSL connection without server's identity verification is not recommended
+    url: jdbc:mysql://127.0.0.1:3306/mytest?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false
+    driver-class-name: com.mysql.jdbc.Driver
+    hikari:
+      idle-timeout: 60000
+      maximum-pool-size: 30
+      minimum-idle: 10
+
+  redis:
+    host: localhost
+    port: 6379
+    # Redis服务器连接密码（默认为空）
+    password:
+    #Redis数据库索引（默认为0）
+    database: 0
+    jedis:
+      pool:
+        # 连接池最大连接数（使用负值表示没有限制）
+        max-active: 8
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1
+        # 连接池中的最大空闲连接
+        max-idle: 8
+        # 连接池中的最小空闲连接
+        min-idle: 0
+    # 连接超时时间（毫秒）
+    timeout: 1200
+
+  #取消模板文件缓存
+  thymeleaf:
+    cache: false
+
+  devtools:
+    #热部署生效,生产环境不要开启这个功能，如果用java -jar启动，springBoot是不会进行热部署的
+    restart:
+      #非静态代码更改时是否重新启动服务器
+      enabled: true
+      #禁用浏览器中的这些路径中少数文件的自动重新加载
+      exclude: static/**,public/**
+      #可能有少量文件不在classpath中，但您仍然可能需要查看这些additional文件/路径以重新加载应用程序
+      additional-paths: script/**
+      #同样，如果您想保留这些默认值并添加其他排除项
+      additional-exclude: styles/**
+
+  #没有active属性，只是单纯表示这个是dev
+  profiles: dev
+  #上传附件报超出自带tomcat限制大小（默认1M）需以下配置
+  #若配置无用，需配合启动类@Configuration添加配置
+
+  servlet:
+    multipart:
+      #单个数据大小
+      max-file-size: 20MB
+      #总数据大小
+      max-request-size: 100MB
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  #对应实体类的路径
+  type-aliases-package: com.example.demo.dto
+  configuration:
+    #表字段下划线自动转dto驼峰，配置了这里就不用手动配置mapper.xml中结果集中的字段与属性配置
+    map-underscore-to-camel-case: true
+    #全局启用或禁用延迟加载
+    lazy-loading-enabled: true
+    #false按需求加载,true时是按层级延时加载。
+    #fetchType是可以注明在mapperxml中association 和 collection里的，选值为eager和lazy，
+    #上述的设置都是针对全局的，在某些情况下不够灵活，fetchType属性的优先级是高于全局属性的，会覆盖它们
+    aggressive-lazy-loading: false
+
+logging:
+  pattern:
+    #%d{yyyy-MM-dd HH:mm:ss, SSS} : 日志生产时间,输出到毫秒的时间
+    #%-5level : 输出日志级别，-5表示左对齐并且固定输出5个字符，如果不足在右边补0
+    #%c : logger的名称(%logger)
+    #%t : 输出当前线程名称
+    #%p : 日志输出格式
+    #%m : 日志内容，即 logger.info("message")
+    #%n : 换行符
+    #%C : Java类名(%F)
+    #%L : 行号
+    #%M : 方法名
+    #%l : 输出语句所在的行数, 包括类名、方法名、文件名、行数
+    #以下意思是只输出日期和内容
+    console: "%d - %msg%n"
+  #只打印指定目录下的info级别的日志
+  level:
+    #指定路径下的日志级别
+    com.example.demo: info
+    #此配置可以在控制台输出sql
+    com.example.demo.mapper: debug
+  #path:
+  file:
+    #指定日志文件名称，就是给默认的日志spring.log重新起个名字
+    name:
+    path:
+
+#配置分页查询
+pagehelper:
+  helper-dialect: mysql
+  #true当页码增加时，如果没有分页数据了，会一直返回最后一页的数据
+  reasonable: false
+  support-methods-arguments: true
+  params: count=countSql
+
+#Actuator监控中心
+management:
+  #关闭安全验证，否则在访问部分监控地址时访问受限，报401未授权错误
+  security:
+    enable : false
+  #将程序地址和程序的监控地址分开，默认有端点/health和/info端点是暴露的
+  #http://localhost:9001/management/actuator 可以查看所有监控项
+  #/info 查看yml文件中以info开头的自定义配置
+  #/heath 可以查看应用程序的运行状态和磁盘状态等信息，会主动监测配置连接地址是否正确。
+  #/beans Spring Boot文注入了哪 Bean，这Bean类型、状态 生命周期等信息
+  #/mappings 查看有多少个url接口
+  #/configprops 查看所有pom依赖
+  server:
+    port: 9001
+    #指定可以请求监控的IP地址,比如只能通过本机监控
+    address: 127.0.0.1
+    ## 只有在设置了 management.server.port 时才有效
+    servlet:
+      context-path: /management
+  #启动所有监控端点
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      #默认 /actuator
+      base-path: /actuator
+  #开启或关闭某一个监控项，以下例子监控项的名字就是shutdown
+  endpoint:
+    shutdown:
+      enabled: true
+
+
