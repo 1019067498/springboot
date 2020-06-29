@@ -29,7 +29,7 @@ import java.util.Date;
 @Data
 @Table(name = "t_user")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class User implements Serializable {
+public class UserDTO implements Serializable {
 	private static final long serialVersionUID = 8675624927131711253L;
 	/**
 	 * redis保存对象的时候要求对象是序列化的且要有一个空的构造器,除非自定义redis序列化方式

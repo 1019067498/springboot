@@ -1,6 +1,6 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dto.User;
+import com.example.demo.dto.UserDTO;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.service.UserService;
 import org.springframework.stereotype.Service;
@@ -23,18 +23,18 @@ public class UserServiceImpl implements UserService {
 	private UserMapper userMapper;
 
 	@Override
-	public int addUser(User user) {
+	public int addUser(UserDTO user) {
 
 		return userMapper.insert(user);
 	}
 
 	@Override
-	public List<User> selectAll() {
+	public List<UserDTO> selectAll() {
 		return userMapper.selectAll();
 	}
 
 	@Override
-	public User selectById(int userId) {
+	public UserDTO selectById(int userId) {
 		return userMapper.selectById(userId);
 	}
 
@@ -44,12 +44,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public int updateUser(User user) {
+	public int updateUser(UserDTO user) {
 		return userMapper.updateUser(user);
 	}
 
 	@Override
-	public int updateUserWithLock(User user) {
+	public int updateUserWithLock(UserDTO user) {
 		return userMapper.updateUserWithLock(user);
 	}
 

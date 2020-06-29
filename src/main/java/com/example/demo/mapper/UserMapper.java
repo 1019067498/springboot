@@ -1,6 +1,6 @@
 package com.example.demo.mapper;
 
-import com.example.demo.dto.User;
+import com.example.demo.dto.UserDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -18,22 +18,22 @@ import java.util.List;
  */
 @Mapper
 public interface UserMapper {
-	public int insert(User user);
+	public int insert(UserDTO user);
 
 	public int deleteUser(int userId);
 
-	public int updateUser(User user);
+	public int updateUser(UserDTO user);
 
-	public User selectById(int userId);
+	public UserDTO selectById(int userId);
 
-	public List<User> selectAll();
+	public List<UserDTO> selectAll();
 
-	public int updateUserWithLock(User user);
+	public int updateUserWithLock(UserDTO user);
 
 	public void moveIn(@Param("userId") int id, @Param("money") BigDecimal money);
 
 	public void moveOut(@Param("userId") int id, @Param("money") BigDecimal money);
 
-	public List<User> selectUserByDept(int deptId);
+	public List<UserDTO> selectUserByDept(int deptId);
 }
 

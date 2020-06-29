@@ -7,10 +7,10 @@ package com.example.demo.dto;
  * @modified By：
  * @version: 1$
  */
-public class Writer {
+public class WriterDTO {
 	private final String writerId;
 
-	public Writer(String writerId) {
+	public WriterDTO(String writerId) {
 		this.writerId = writerId;
 		System.out.println(writerId + "初始化完毕");
 	}

@@ -1,6 +1,6 @@
 package com.example.demo.task;
 
-import com.example.demo.dto.User;
+import com.example.demo.dto.UserDTO;
 import com.example.demo.service.UserService;
 import org.springframework.stereotype.Component;
 
@@ -48,8 +48,8 @@ public class ScheduledTask {
 	public void scheduledTask1() {
 		int userId = 3;
 		//根据相同的id用户信息，赋给2个对象
-		User u1 = this.userService.selectById(userId);
-		User u2 = this.userService.selectById(userId);
+		UserDTO u1 = this.userService.selectById(userId);
+		UserDTO u2 = this.userService.selectById(userId);
 		System.out.println(u1);
 		System.out.println(u2);
 

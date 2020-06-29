@@ -1,6 +1,6 @@
 package com.example.demo.mapper;
 
-import com.example.demo.dto.Department;
+import com.example.demo.dto.DepartmentDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -12,5 +12,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface DepartmentMapper {
-	public Department selectDeptAndUser(int id);
+	public DepartmentDTO selectDeptAndUser(int id);
 }

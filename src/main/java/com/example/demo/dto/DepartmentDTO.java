@@ -22,14 +22,14 @@ import java.util.List;
 @Data
 @Table(name = "department")
 @JsonIgnoreProperties(value = {"handler"})
-public class Department implements Serializable {
+public class DepartmentDTO implements Serializable {
 	private static final long serialVersionUID = -8067003343072569597L;
 	@Id
 	@KeySql(useGeneratedKeys = true)
 	private Integer id;
 	private String deptName;
 	@Transient
-	private List<User> users;
+	private List<UserDTO> users;
 
 	@Override
 	public String toString() {

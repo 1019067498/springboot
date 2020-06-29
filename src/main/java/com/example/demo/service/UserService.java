@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.User;
+import com.example.demo.dto.UserDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,17 +17,17 @@ import java.util.List;
  */
 @Service
 public interface UserService {
-	public int addUser(User user);
+	public int addUser(UserDTO user);
 
 	public int deleteUser(int userId);
 
-	public int updateUser(User user);
+	public int updateUser(UserDTO user);
 
-	public User selectById(int userId);
+	public UserDTO selectById(int userId);
 
-	public List<User> selectAll();
+	public List<UserDTO> selectAll();
 
-	public int updateUserWithLock(User user);
+	public int updateUserWithLock(UserDTO user);
 
 	/**
 	 * @param outer

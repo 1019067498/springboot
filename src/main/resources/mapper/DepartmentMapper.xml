@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.demo.mapper.DepartmentMapper">
-    <resultMap id="deptMap" type="com.example.demo.dto.Department">
+    <resultMap id="deptMap" type="com.example.demo.dto.DepartmentDTO">
         <id property="id" column="id" javaType="java.lang.Integer"></id>
         <result property="deptName" column="dept_name" javaType="java.lang.String"></result>
         <!-- 此处的id其实是部门的id，相当于再通过部门的id查询与此关联的员工 -->

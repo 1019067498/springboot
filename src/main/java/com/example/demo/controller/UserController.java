@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.example.demo.dto.User;
+import com.example.demo.dto.UserDTO;
 import com.example.demo.exception.UserNotExist;
 import com.example.demo.service.UserService;
 import com.example.demo.utils.RedisUtil;
@@ -46,7 +46,7 @@ public class UserController {
      * @return xml配置useGeneratedKeys="true" keyProperty="userId"插入数据后会将id直接返回到对象 否则返回的对象没有id属性
      */
     @PostMapping
-    public String addUser(User user) {
+    public String addUser(UserDTO user) {
         userService.addUser(user);
         return JSON.toJSONString(user) ;
     }
@@ -81,18 +81,19 @@ public class UserController {
      * 获取用户策略：先从缓存中获取用户，没有则取数据表中 数据，再将数据写入缓存
      */
     @GetMapping("/{userId}")
-    public User selectById(@PathVariable("userId") int userId) {
+    public UserDTO  selectById(@PathVariable("userId") int userId) {
         String path = getPath();
         //redis中key加冒号可以实现文件夹层级结构展示
         String key = path  + ":userId_" + userId;
 
         boolean hasKey = redisUtil.hasKey(key);
-        User user =null;
+        UserDTO user =null;
         if (hasKey) {
             Object userObj;
-            //此处要用OBJ接收后转化User，直接用User接收会报java.util.LinkedHashMap cannot be cast to com.example.demo.dto.User
+            //此处要用OBJ接收后转化User，直接用User接收会报java.util.LinkedHashMap cannot be cast to com.example.demo.dto.UserDTO
             userObj = redisUtil.get(key);
-            user = JSON.parseObject(JSON.toJSONString(userObj),User.class);
+            redisUtil.get(key);
+            user = JSON.parseObject(JSON.toJSONString(userObj),UserDTO.class);
             System.out.println("==========从缓存中获得数据=========");
         } else {
             user = userService.selectById(userId);
@@ -113,8 +114,8 @@ public class UserController {
      * @return
      */
     @PutMapping()
-    public User updateUser(User user) {
-        User userOld = userService.selectById(user.getUserId());
+    public UserDTO updateUser(UserDTO user) {
+        UserDTO userOld = userService.selectById(user.getUserId());
         userOld.setUserName(user.getUserName());
         userOld.setPassword(user.getPassword());
         userOld.setPhone(user.getPhone());
@@ -128,7 +129,7 @@ public class UserController {
                 System.out.println("删除缓存中的key=========>" + key);
             }
             // 再将更新后的数据加入缓存
-            User userNew = userService.selectById(user.getUserId());
+            UserDTO userNew = userService.selectById(user.getUserId());
             if (userNew != null) {
                 redisUtil.set(key, userNew, 60*60);
             }
@@ -143,7 +144,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/selectAll")
-    public List<User> selectAll() {
+    public List<UserDTO> selectAll() {
         return userService.selectAll();
     }
 

@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.Department;
+import com.example.demo.dto.DepartmentDTO;
 import org.springframework.stereotype.Service;
 
 /**
@@ -8,5 +8,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public interface DepartmentService {
-	public Department selectDeptAndUser(int id);
+	public DepartmentDTO selectDeptAndUser(int id);
 }

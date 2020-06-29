@@ -1,6 +1,6 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dto.Department;
+import com.example.demo.dto.DepartmentDTO;
 import com.example.demo.mapper.DepartmentMapper;
 import com.example.demo.service.DepartmentService;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 	 * @return
 	 */
 	@Override
-	public Department selectDeptAndUser(int id) {
+	public DepartmentDTO selectDeptAndUser(int id) {
 		return departmentMapper.selectDeptAndUser(id);
 	}
 }
