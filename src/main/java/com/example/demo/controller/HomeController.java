@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Mickey
  */
 @RestController
+/**
+ * @ConfigurationProperties(prefix = "mybatis")
+ */
 public class HomeController {
 	/**
 	 * 获取配置文件中的值

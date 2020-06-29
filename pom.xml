@@ -143,6 +143,12 @@
             <artifactId>httpclient</artifactId>
             <version>${httpclient.version}</version>
         </dependency>
+        <!--解决报红Spring Boot Configuration Annotation Processor not configured-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <build>

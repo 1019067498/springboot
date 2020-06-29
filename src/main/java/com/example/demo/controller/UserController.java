@@ -4,20 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.example.demo.dto.User;
 import com.example.demo.exception.UserNotExist;
 import com.example.demo.service.UserService;
+import com.example.demo.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author ：11537qujiaqi
@@ -31,27 +25,8 @@ import java.util.concurrent.TimeUnit;
 public class UserController {
     @Resource
     UserService userService;
-
-    /**
-     * 自定义redis序列化方式，否则键值以二进制存储，
-     * @param redisTemplate
-     */
     @Resource
-    private RedisTemplate redisTemplate;
-    @Autowired(required = false)
-    public void setRedisTemplate(RedisTemplate redisTemplate) {
-        RedisSerializer stringSerializer = new StringRedisSerializer();
-        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
-
-        redisTemplate.setKeySerializer(stringSerializer);
-        redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
-        redisTemplate.setHashKeySerializer(stringSerializer);
-        redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
-        // 启用默认序列化方式
-        redisTemplate.setEnableDefaultSerializer(true);
-        redisTemplate.setDefaultSerializer(jackson2JsonRedisSerializer);
-        this.redisTemplate = redisTemplate;
-    }
+    RedisUtil redisUtil;
 
     /**
      * 获取包路径
@@ -89,9 +64,9 @@ public class UserController {
         String path = getPath();
         String key = path + ":userId_" + userId;
         if (result != 0) {
-            boolean hasKey = redisTemplate.hasKey(key);
+            boolean hasKey = redisUtil.hasKey(key);
             if (hasKey) {
-                redisTemplate.delete(key);
+                redisUtil.del(key);
                 System.out.println("删除了缓存中的key:" + key);
             }
         }
@@ -111,15 +86,12 @@ public class UserController {
         //redis中key加冒号可以实现文件夹层级结构展示
         String key = path  + ":userId_" + userId;
 
-        ValueOperations<String, User> operations = redisTemplate.opsForValue();
-//        HashOperations<String, Object, Object> operations = redisTemplate.opsForHash();
-        boolean hasKey = redisTemplate.hasKey(key);
+        boolean hasKey = redisUtil.hasKey(key);
         User user =null;
         if (hasKey) {
             Object userObj;
             //此处要用OBJ接收后转化User，直接用User接收会报java.util.LinkedHashMap cannot be cast to com.example.demo.dto.User
-            userObj = operations.get(key);
-            operations.get(key);
+            userObj = redisUtil.get(key);
             user = JSON.parseObject(JSON.toJSONString(userObj),User.class);
             System.out.println("==========从缓存中获得数据=========");
         } else {
@@ -129,7 +101,7 @@ public class UserController {
             }
             System.out.println("==========从数据库中获得数据=========");
             // 写入缓存
-            operations.set(key, user, 5, TimeUnit.HOURS);
+            redisUtil.set(key, user, 60*60);
         }
         return user;
     }
@@ -150,16 +122,15 @@ public class UserController {
         if (result != 0) {
             String path = getPath();
             String key = path + ":userId_" + user.getUserId();
-            ValueOperations<String, User> operations = redisTemplate.opsForValue();
-            boolean hasKey = redisTemplate.hasKey(key);
+            boolean hasKey = redisUtil.hasKey(key);
             if (hasKey) {
-                redisTemplate.delete(key);
+                redisUtil.del(key);
                 System.out.println("删除缓存中的key=========>" + key);
             }
             // 再将更新后的数据加入缓存
             User userNew = userService.selectById(user.getUserId());
             if (userNew != null) {
-                operations.set(key, userNew, 3, TimeUnit.HOURS);
+                redisUtil.set(key, userNew, 60*60);
             }
         }
 

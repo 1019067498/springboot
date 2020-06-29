@@ -13,10 +13,17 @@ server:
 
 spring:
   http:
+    encoding:
+      charset: utf-8
+
   #从数据库读日期少了8小时，加上jackson
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+
+  #配置banner的显示，也可以在此关闭
+  main:
+    banner-mode: console
 
   datasource:
     username: root
