@@ -11,7 +11,7 @@
             <id column="userId" property="userId"/>
             <result column="userName" property="userName"/>
         </collection> -->
-        <collection property="users" column="id" ofType="com.example.demo.dto.User">
+        <collection property="users" column="id" ofType="com.example.demo.dto.UserDTO">
             <id property="userId" column="userId" javaType="java.lang.Integer"></id>
             <result property="userName" column="userName" javaType="java.lang.String"></result>
         </collection>
@@ -21,7 +21,14 @@
         select * from department d where d.id = #{id}
     </select> -->
     <select id="selectDeptAndUser" parameterType="int" resultMap="deptMap">
-        select d.id,d.dept_name,u.userId,u.userName from department d left join t_user u on d.id = u.dept_id where d.id =
-         #{id}
+        select d.id,d.dept_name,u.userId,u.userName from department d left join t_user u on d.id = u.dept_id
+        <where>
+            <if test="id != null and id != ''">
+                and d.id = #{id}
+            </if>
+            <if test="id == null or id == ''">
+                and 1 = 2
+            </if>
+        </where>
     </select>
 </mapper>

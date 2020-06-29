@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.demo.mapper.UserMapper">
     <!--//自定义返回结果集-->
-    <resultMap id="userMap" type="com.example.demo.dto.User">
+    <resultMap id="userMap" type="com.example.demo.dto.UserDTO">
         <id property="userId" column="userId" javaType="java.lang.Integer"></id>
         <result property="userName" column="userName" javaType="java.lang.String"></result>
         <result property="password" column="password" javaType="java.lang.String"></result>
@@ -31,7 +31,7 @@
     <result property="FLD_FLOAT" column="FLD_FLOAT"  javaType="float" jdbcType="FLOAT"/> 
     <result property="FLD_TIMESTAMP" column="FLD_TIMESTAMP"  javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>  
     -->
-    <resultMap id="userMap1" type="com.example.demo.dto.User">
+    <resultMap id="userMap1" type="com.example.demo.dto.UserDTO">
         <id property="userId" column="userId" javaType="java.lang.Integer"></id>
         <result property="userName" column="userName" javaType="java.lang.String"></result>
     </resultMap>
@@ -46,7 +46,7 @@
     </sql>
 
     <!--useGeneratedKeys="true" keyProperty="id"-->
-    <insert id="insert" parameterType="com.example.demo.dto.User" useGeneratedKeys="true" keyProperty="userId">
+    <insert id="insert" parameterType="com.example.demo.dto.UserDTO" useGeneratedKeys="true" keyProperty="userId">
         insert into t_user (userName,password,phone,updateDate) values (        #{userName, jdbcType = VARCHAR}        ,
                #{password, jdbcType = VARCHAR}        ,        #{phone, jdbcType = VARCHAR}       ,now()  )
     </insert>
@@ -59,7 +59,7 @@
         select * from t_user where userId=        #{userId}
     </select>
 
-    <update id="updateUser" parameterType="com.example.demo.dto.User">
+    <update id="updateUser" parameterType="com.example.demo.dto.UserDTO">
         update t_user set userName=        #{userName}        ,password=        #{password}        ,phone=        #{phone}
            ,updateDate=  now()
           where userId=        #{userId}
@@ -71,7 +71,7 @@
 
     </select>
 
-    <update id="updateUserWithLock" parameterType="com.example.demo.dto.User">
+    <update id="updateUserWithLock" parameterType="com.example.demo.dto.UserDTO">
         update t_user set userName=        #{userName}        ,password=        #{password}        ,phone=        #{phone}
            ,updateDate=     #{updateDate}     ,version=version+1
           where userId=        #{userId}     and version=    #{version}
