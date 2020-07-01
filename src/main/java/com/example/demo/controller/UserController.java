@@ -175,7 +175,7 @@ public class UserController {
     private String get(@PathVariable("key") String key) {
         Object userObj;
         userObj = redisUtil.get(key);
-        return userObj.toString();
+        return userObj == null ? null : userObj.toString();
     }
 
     /**
