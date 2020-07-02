@@ -6,7 +6,6 @@ import com.example.demo.exception.UserNotExist;
 import com.example.demo.service.UserService;
 import com.example.demo.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -92,7 +91,6 @@ public class UserController {
             Object userObj;
             //此处要用OBJ接收后转化User，直接用User接收会报java.util.LinkedHashMap cannot be cast to com.example.demo.dto.UserDTO
             userObj = redisUtil.get(key);
-            redisUtil.get(key);
             user = JSON.parseObject(JSON.toJSONString(userObj),UserDTO.class);
             System.out.println("==========从缓存中获得数据=========");
         } else {
@@ -157,7 +155,7 @@ public class UserController {
      *         BigDecimal("1").divide(new BigDecimal("3"), 6, BigDecimal.ROUND_HALF_UP)
      */
     @RequestMapping("/transfer")
-    public String test() {
+    public String transfer() {
         try {
             // 2用户给3用户转账100.5元
             userService.transfer(2, 3, new BigDecimal("100.5"));
@@ -168,25 +166,43 @@ public class UserController {
         }
     }
 
-    @Resource
-    private StringRedisTemplate template;
-
+    /**
+     * 从redis中获取值
+     * @param key
+     * @return
+     */
     @GetMapping("/redis/get/{key}")
     private String get(@PathVariable("key") String key) {
-        return template.opsForValue().get(key);
+        Object userObj;
+        userObj = redisUtil.get(key);
+        return userObj == null ? null : userObj.toString();
     }
 
+    /**
+     * 向redis中放值
+     * @param key
+     * @param value
+     * @return
+     */
     @PostMapping("/redis/set/{key}/{value}")
     private Boolean set(@PathVariable("key") String key, @PathVariable("value") String value) {
-        boolean flag = true;
-        try {
-            template.opsForValue().set(key, value);
-        } catch (Exception e) {
-            e.printStackTrace();
-            flag = false;
-        }
-        return flag;
+        return redisUtil.set(key, value);
     }
+
+    /**
+     * 测试拦截器过滤器
+     * @return
+     * 过滤器的实现基于回调函数。而拦截器（代理模式）的实现基于反射，代理又分静态代理和动态代理，动态代理是拦截器的简单实现。那何时使用拦截器？何时使用过滤器？
+     * 如果是非spring项目，那么拦截器不能用，只能使用过滤器，这里说的拦截器是基于spring的拦截器。
+     * 如果是处理controller前后，既可以使用拦截器也可以使用过滤器，如果都使用了，注意前后顺序。
+     * 如果是处理dispatcherServlet前后，只能使用过滤器。
+     */
+    @RequestMapping(value = "/hello")
+    public String test() {
+        log.info("test hello.............");
+        return "SUCCESS";
+    }
+
 
 }
 
