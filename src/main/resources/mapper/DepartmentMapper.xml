@@ -11,6 +11,7 @@
             <id column="userId" property="userId"/>
             <result column="userName" property="userName"/>
         </collection> -->
+        <!--注意：collection中的id标签和resultMap中的id标签不能完全重复，要么修改collection的id标签为result标签，要么修改column名-->
         <collection property="users" column="id" ofType="com.example.demo.dto.UserDTO">
             <id property="userId" column="userId" javaType="java.lang.Integer"></id>
             <result property="userName" column="userName" javaType="java.lang.String"></result>
