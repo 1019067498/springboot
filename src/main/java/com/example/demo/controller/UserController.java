@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author ：11537qujiaqi
@@ -203,6 +205,74 @@ public class UserController {
         return "SUCCESS";
     }
 
+    @GetMapping("/lambda")
+    public  void testLambda(){
+        List<UserDTO> userList = new ArrayList<>();
+        userList.add(new UserDTO(20,"张三"));
+        userList.add(new UserDTO(10,"李四"));
+        userList.add(new UserDTO(30, "王五"));
+
+        System.out.println("----------forEach集合中内部迭代----------");
+        userList.forEach(user -> System.out.println(user.toString()));
+        userList.stream().map(item -> item.getUserId() + item.getUserId()*1.5).forEach(user -> System.out.println(user.toString()));
+
+
+        System.out.println("----------filter过滤map返回需要的结果collect将结果去重转化为list----------");
+        List<String> result1 = userList.stream().filter(user -> user.getUserId() > 18).distinct().map(UserDTO::getUserName).collect(Collectors.toList());
+        System.out.println(result1);
+
+        System.out.println("----------count返回流中元素的个数----------");
+        //map主要是用于遍历每个参数，然后进行参数合并或者返回新类型的集合
+        //FlatMap主要是用于stream合并
+        long result2 = userList.stream().filter(user -> user.getUserId() > 18).map(user -> user.getUserName()).count();
+        System.out.println(result2);
+
+        System.out.println("----------filter过滤后limit限制数量并输出----------");
+        userList.stream().filter(user -> user.getUserId() > 18).limit(1).forEach(user -> System.out.println(user.getUserName()));
+
+        System.out.println("----------sorted排序----------");
+        List<UserDTO> result3 = userList.stream().sorted(Comparator.comparingInt(UserDTO::getUserId)).collect(Collectors.toList());
+        List<UserDTO> result4 = userList.stream().sorted(Comparator.comparingInt(UserDTO::getUserId).reversed()).collect(Collectors.toList());
+        System.out.println("升序 " + result3);
+        System.out.println("降序 " + result4);
+
+        System.out.println("----------sum求和----------");
+        int result5 = userList.stream().mapToInt(UserDTO::getUserId).sum();
+        System.out.println(result5);
+
+        System.out.println("----------将字符串换成大写并用逗号拼接起来----------");
+        List<String> stringList = Arrays.asList("USA", "Japan", "France", "Germany", "Italy", "U.K.","Canada");
+        String result6 = stringList.stream().map(x -> x.toUpperCase()).collect(Collectors.joining(", "));
+        System.out.println(result6);
+
+        System.out.println("----------list转map----------");
+        Map<String, UserDTO> userMap;
+        Map<String, List<UserDTO>> userMapAll;
+        userMap = userList.stream().collect(Collectors.toMap(UserDTO::getUserName, Function.identity()));
+        userMapAll =userList.stream().collect(Collectors.groupingBy(item -> item.getUserName()));
+        //userMapAll =userList.stream().collect(Collectors.groupingBy(item -> item.getUserName() + "-" + item.getUserId()));
+        System.out.println(userMap);
+        System.out.println(userMapAll);
+
+        System.out.println("----------list的交集和差集----------");
+        ArrayList<Integer> listA = new ArrayList<>();
+        ArrayList<Integer> listB = new ArrayList<>();
+        listA.add(2);
+        listA.add(3);
+        listA.add(8);
+        System.out.println("**this is listA*********"+listA);
+        listB.add(3);
+        listB.add(8);
+        listB.add(9);
+        System.out.println("**this is listB*********"+listB);
+
+        List<Integer> intersectionList =listA.stream().filter(t->listB.contains(t)).collect(Collectors.toList());
+        System.out.println("集合的交集"+intersectionList);
+        List<Integer> ListARemoveB =listA.stream().filter(t-> !listB.contains(t)).collect(Collectors.toList());
+        System.out.println("a去除b的差集"+ListARemoveB);
+        List<Integer> ListBRemoveA =listB.stream().filter(t-> !listA.contains(t)).collect(Collectors.toList());
+        System.out.println("b去除a的差集"+ListBRemoveA);
+    }
 
 }
 

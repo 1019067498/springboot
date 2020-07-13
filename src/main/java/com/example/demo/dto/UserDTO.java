@@ -60,5 +60,9 @@ public class UserDTO implements Serializable {
 	private Integer deptId;
 
 
+	public UserDTO(Integer userId, String userName) {
+		this.userId = userId;
+		this.userName = userName;
+	}
 }
 
