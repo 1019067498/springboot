@@ -60,9 +60,10 @@ public class UserDTO implements Serializable {
 	private Integer deptId;
 
 
-	public UserDTO(Integer userId, String userName) {
+	public UserDTO(Integer userId, String userName,String password) {
 		this.userId = userId;
 		this.userName = userName;
+		this.password = password;
 	}
 }
 

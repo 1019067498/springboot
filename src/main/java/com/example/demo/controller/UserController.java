@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -208,9 +207,10 @@ public class UserController {
     @GetMapping("/lambda")
     public  void testLambda(){
         List<UserDTO> userList = new ArrayList<>();
-        userList.add(new UserDTO(20,"张三"));
-        userList.add(new UserDTO(10,"李四"));
-        userList.add(new UserDTO(30, "王五"));
+        userList.add(new UserDTO(20,"张三","123"));
+        userList.add(new UserDTO(10,"李四","456"));
+        userList.add(new UserDTO(30, "王五","789"));
+        userList.add(new UserDTO(30, "王五","147"));
 
         System.out.println("----------forEach集合中内部迭代----------");
         userList.forEach(user -> System.out.println(user.toString()));
@@ -219,6 +219,10 @@ public class UserController {
 
         System.out.println("----------filter过滤map返回需要的结果collect将结果去重转化为list----------");
         List<String> result1 = userList.stream().filter(user -> user.getUserId() > 18).distinct().map(UserDTO::getUserName).collect(Collectors.toList());
+        //根据多个条件过滤
+        //Predicate<Person> predicate1 = p->p.getSalary()<20000d;
+        //Predicate<Person> predicate2 = p-> p.getAddr().equals("中国深圳");
+        //List<Person> personList3 = personList.stream().filter(predicate1.and(predicate2)).collect(Collectors.toList());
         System.out.println(result1);
 
         System.out.println("----------count返回流中元素的个数----------");
@@ -247,12 +251,18 @@ public class UserController {
 
         System.out.println("----------list转map----------");
         Map<String, UserDTO> userMap;
+        Map<String, String> userMap2;
         Map<String, List<UserDTO>> userMapAll;
-        userMap = userList.stream().collect(Collectors.toMap(UserDTO::getUserName, Function.identity()));
+        //以name为键，该name的对象为值。键不能重复
+        //userMap = userList.stream().collect(Collectors.toMap(UserDTO::getUserName, Function.identity()));
+        //以name为键，密码为值。若键重复时取最后插入的键对应的值
+        userMap2 = userList.stream().collect(Collectors.toMap(UserDTO::getUserName, UserDTO::getPassword, (key1, key2) -> key2));
+        //以name为键，该name的对象的list为值
         userMapAll =userList.stream().collect(Collectors.groupingBy(item -> item.getUserName()));
         //userMapAll =userList.stream().collect(Collectors.groupingBy(item -> item.getUserName() + "-" + item.getUserId()));
-        System.out.println(userMap);
+        //System.out.println(userMap);
         System.out.println(userMapAll);
+        System.out.println(userMap2);
 
         System.out.println("----------list的交集和差集----------");
         ArrayList<Integer> listA = new ArrayList<>();
