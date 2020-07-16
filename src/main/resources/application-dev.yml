@@ -6,7 +6,7 @@ server:
     min-spare-threads: 25
     max-threads: 300
     accept-count: 200
-  port: 8080
+  port: 8081
   servlet:
     #http://localhost:8080/demo/hello
     context-path: /demo
@@ -149,7 +149,7 @@ management:
   #/mappings 查看有多少个url接口
   #/configprops 查看所有pom依赖
   server:
-    port: 9001
+    port: 9002
     #指定可以请求监控的IP地址,比如只能通过本机监控
     address: 127.0.0.1
     ## 只有在设置了 management.server.port 时才有效

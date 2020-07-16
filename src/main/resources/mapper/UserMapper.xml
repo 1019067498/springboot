@@ -67,8 +67,6 @@
 
     <select id="selectAll" resultMap="userMap">
         select <include refid="column"/> from t_user a
-
-
     </select>
 
     <update id="updateUserWithLock" parameterType="com.example.demo.dto.UserDTO">

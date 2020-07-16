@@ -6,6 +6,7 @@ import com.example.demo.exception.UserNotExist;
 import com.example.demo.service.UserService;
 import com.example.demo.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -75,7 +76,7 @@ public class UserController {
 
     /**
      * 查询单个用户信息
-     *
+     * 用单个对象接收，返回数据是空时该对象为null注意空指针,即使使用无参构造也是null
      * @param userId
      * @return
      * 获取用户策略：先从缓存中获取用户，没有则取数据表中 数据，再将数据写入缓存
@@ -87,7 +88,7 @@ public class UserController {
         String key = path  + ":userId_" + userId;
 
         boolean hasKey = redisUtil.hasKey(key);
-        UserDTO user =null;
+        UserDTO user = new UserDTO();
         if (hasKey) {
             Object userObj;
             //此处要用OBJ接收后转化User，直接用User接收会报java.util.LinkedHashMap cannot be cast to com.example.demo.dto.UserDTO
@@ -139,12 +140,14 @@ public class UserController {
 
     /**
      * 查询全部用户信息
-     *
+     * 用list等接收，如果没有查询到数据，会返回空集合而不是null
      * @return
      */
     @GetMapping("/selectAll")
     public List<UserDTO> selectAll() {
-        return userService.selectAll();
+        List<UserDTO> userDTOList;
+        userDTOList =userService.selectAll();
+        return userDTOList;
     }
 
     /**
@@ -282,6 +285,11 @@ public class UserController {
         System.out.println("a去除b的差集"+ListARemoveB);
         List<Integer> ListBRemoveA =listB.stream().filter(t-> !listA.contains(t)).collect(Collectors.toList());
         System.out.println("b去除a的差集"+ListBRemoveA);
+
+        System.out.println("----------指定位数随机字符串----------");
+        //配合<groupId>org.apache.commons</groupId><artifactId>commons-lang3</artifactId>使用
+        String result7= RandomStringUtils.randomAlphanumeric(10);
+        System.out.println(result7);
     }
 
 }

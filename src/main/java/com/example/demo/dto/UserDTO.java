@@ -65,5 +65,7 @@ public class UserDTO implements Serializable {
 		this.userName = userName;
 		this.password = password;
 	}
+
+	public UserDTO(){}
 }
 
