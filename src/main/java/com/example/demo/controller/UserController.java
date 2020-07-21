@@ -222,6 +222,8 @@ public class UserController {
 
         System.out.println("----------filter过滤map返回需要的结果collect将结果去重转化为list----------");
         List<String> result1 = userList.stream().filter(user -> user.getUserId() > 18).distinct().map(UserDTO::getUserName).collect(Collectors.toList());
+        //返回过滤后对象的list
+        //List<UserDTO> result1 = userList.stream().filter(user -> user.getUserId() > 18).distinct().collect(Collectors.toList());
         //根据多个条件过滤
         //Predicate<Person> predicate1 = p->p.getSalary()<20000d;
         //Predicate<Person> predicate2 = p-> p.getAddr().equals("中国深圳");
@@ -231,7 +233,7 @@ public class UserController {
         System.out.println("----------count返回流中元素的个数----------");
         //map主要是用于遍历每个参数，然后进行参数合并或者返回新类型的集合
         //FlatMap主要是用于stream合并
-        long result2 = userList.stream().filter(user -> user.getUserId() > 18).map(user -> user.getUserName()).count();
+        long result2 = userList.stream().filter(user -> user.getUserId() > 18).count();
         System.out.println(result2);
 
         System.out.println("----------filter过滤后limit限制数量并输出----------");
@@ -264,8 +266,8 @@ public class UserController {
         userMapAll =userList.stream().collect(Collectors.groupingBy(item -> item.getUserName()));
         //userMapAll =userList.stream().collect(Collectors.groupingBy(item -> item.getUserName() + "-" + item.getUserId()));
         //System.out.println(userMap);
-        System.out.println(userMapAll);
         System.out.println(userMap2);
+        System.out.println(userMapAll);
 
         System.out.println("----------list的交集和差集----------");
         ArrayList<Integer> listA = new ArrayList<>();
