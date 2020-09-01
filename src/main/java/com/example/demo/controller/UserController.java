@@ -35,8 +35,8 @@ public class UserController {
      * redis中key加冒号可以实现文件夹层级结构展示
      */
     public String getPath(){
-//        获取方法名
-//        Thread.currentThread() .getStackTrace()[1].getMethodName()
+        //获取方法名
+        //Thread.currentThread() .getStackTrace()[1].getMethodName()
         return this.getClass().getName().replaceAll("\\.",":");
     }
 
@@ -292,6 +292,9 @@ public class UserController {
         //配合<groupId>org.apache.commons</groupId><artifactId>commons-lang3</artifactId>使用
         String result7= RandomStringUtils.randomAlphanumeric(10);
         System.out.println(result7);
+
+        System.out.println("----------去除前导零----------");
+        System.out.println("00001234".replaceAll("^0+",""));
     }
 
 }
