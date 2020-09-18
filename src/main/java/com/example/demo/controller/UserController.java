@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -295,6 +297,17 @@ public class UserController {
 
         System.out.println("----------去除前导零----------");
         System.out.println("00001234".replaceAll("^0+",""));
+
+        System.out.println("----------格式化时间----------");
+        String dateString = "";
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = null;
+        try {
+            date = sf.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        System.out.println(sf.format(date));
     }
 
 }
