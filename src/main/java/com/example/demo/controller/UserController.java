@@ -6,6 +6,8 @@ import com.example.demo.exception.UserNotExist;
 import com.example.demo.service.UserService;
 import com.example.demo.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -299,7 +301,7 @@ public class UserController {
         System.out.println("00001234".replaceAll("^0+",""));
 
         System.out.println("----------格式化时间----------");
-        String dateString = "";
+        String dateString = "2020-01-27 14:01:30";
         SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = null;
         try {
@@ -308,6 +310,14 @@ public class UserController {
             e.printStackTrace();
         }
         System.out.println(sf.format(date));
+
+        System.out.println("----------工具类测试----------");
+        List<UserDTO> userDTOList = new ArrayList<>();
+        Set<String> stringSet = new HashSet<>();
+        Map<String, UserDTO> userDTOHashMap = new HashMap<>();
+        System.out.println(CollectionUtils.isEmpty(userDTOList));
+        System.out.println(CollectionUtils.isEmpty(stringSet));
+        System.out.println(MapUtils.isEmpty(userDTOHashMap));
     }
 
 }
