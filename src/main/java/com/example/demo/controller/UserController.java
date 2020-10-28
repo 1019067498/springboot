@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -17,6 +18,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.example.demo.utils.CommonUtils.nvl;
 
 /**
  * @author ：11537qujiaqi
@@ -312,12 +315,42 @@ public class UserController {
         System.out.println(sf.format(date));
 
         System.out.println("----------工具类测试----------");
+        UserDTO userDTO = new UserDTO();
         List<UserDTO> userDTOList = new ArrayList<>();
         Set<String> stringSet = new HashSet<>();
         Map<String, UserDTO> userDTOHashMap = new HashMap<>();
+        String testString = "";
+        System.out.println("----------CollectionUtils----------");
         System.out.println(CollectionUtils.isEmpty(userDTOList));
         System.out.println(CollectionUtils.isEmpty(stringSet));
+        System.out.println("----------MapUtils----------");
         System.out.println(MapUtils.isEmpty(userDTOHashMap));
+        System.out.println("----------Objects----------");
+        System.out.println(Objects.isNull(userDTO));
+        System.out.println(Objects.nonNull(userDTO));
+        System.out.println("----------StringUtils----------");
+        System.out.println(StringUtils.isEmpty(" "));
+        System.out.println(StringUtils.isBlank(" "));
+        System.out.println(StringUtils.contains("qwert","qw"));
+        //去掉参数2字符串中在参数一中开头部分共有的部分，结果为:人民共和加油
+        System.out.println(StringUtils.difference("中国加油", "中国人民共和加油"));
+        //判断2个字符串是否相等相等,Null也相等
+        System.out.println(StringUtils.equals(null, null));
+        //只能判null不能判""字符串或者size=0的对象
+        System.out.println("----------nvl判空----------");
+        System.out.println(nvl(userDTO,"对象为空"));
+
+
+        System.out.println("----------BigDecimal类测试----------");
+        BigDecimal bigDecimal1 = new BigDecimal(10.100001);
+        BigDecimal bigDecimal2 = new BigDecimal("10.100001");
+        System.out.println(bigDecimal1.compareTo(bigDecimal2));
+        System.out.println("----------BigDecimal转String----------");
+        System.out.println(new BigDecimal("100.000").toString());
+        System.out.println("----------BigDecimal转String去除多余0----------");
+        System.out.println(new BigDecimal("100.000").stripTrailingZeros().toString());
+        System.out.println("----------BigDecimal转String避免科学计数----------");
+        System.out.println(new BigDecimal("100.000").stripTrailingZeros().toPlainString());
     }
 
 }
