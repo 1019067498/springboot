@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.example.demo.utils.CommonUtils.nvl;
@@ -154,6 +155,7 @@ public class UserController {
     public List<UserDTO> selectAll() {
         List<UserDTO> userDTOList;
         userDTOList =userService.selectAll();
+
         return userDTOList;
     }
 
@@ -261,14 +263,25 @@ public class UserController {
         String result6 = stringList.stream().map(x -> x.toUpperCase()).collect(Collectors.joining(", "));
         System.out.println(result6);
 
+        System.out.println("----------查询id最大的user----------");
+        UserDTO maxIdUser = userList.stream().max(Comparator.comparing(UserDTO::getUserId)).get();
+        System.out.println(maxIdUser.toString());
+        System.out.println("----------查询最大id方式1----------");
+        System.out.println(userList.stream().max(Comparator.comparing(UserDTO::getUserId)).get().getUserId());
+        System.out.println("----------查询最大id方式2----------");
+        System.out.println(userList.stream().mapToDouble(UserDTO::getUserId).max().getAsDouble());
+
         System.out.println("----------list转map----------");
         Map<String, UserDTO> userMap;
         Map<String, String> userMap2;
+        Map<String, UserDTO> userMap3;
         Map<String, List<UserDTO>> userMapAll;
         //以name为键，该name的对象为值。键不能重复
         //userMap = userList.stream().collect(Collectors.toMap(UserDTO::getUserName, Function.identity()));
         //以name为键，密码为值。若键重复时取最后插入的键对应的值
         userMap2 = userList.stream().collect(Collectors.toMap(UserDTO::getUserName, UserDTO::getPassword, (key1, key2) -> key2));
+        //以name为键，该name的对象为值。若键重复时取最先插入的键对应的值
+        userMap3 = userList.stream().collect(Collectors.toMap(UserDTO::getUserName, Function.identity(), (key1, key2) -> key1));
         //以name为键，该name的对象的list为值
         userMapAll =userList.stream().collect(Collectors.groupingBy(item -> item.getUserName()));
         //userMapAll =userList.stream().collect(Collectors.groupingBy(item -> item.getUserName() + "-" + item.getUserId()));
@@ -316,6 +329,8 @@ public class UserController {
 
         System.out.println("----------工具类测试----------");
         UserDTO userDTO = new UserDTO();
+        UserDTO userDTO2 = new UserDTO(1,"zhangsan",null);
+        UserDTO userDTO3 = new UserDTO(1,"zhangsan",null);
         List<UserDTO> userDTOList = new ArrayList<>();
         Set<String> stringSet = new HashSet<>();
         Map<String, UserDTO> userDTOHashMap = new HashMap<>();
@@ -324,10 +339,13 @@ public class UserController {
         System.out.println(CollectionUtils.isEmpty(userDTOList));
         System.out.println(CollectionUtils.isEmpty(stringSet));
         System.out.println("----------MapUtils----------");
-        System.out.println(MapUtils.isEmpty(userDTOHashMap));
+        System.out.println(MapUtils.isNotEmpty(userDTOHashMap));
         System.out.println("----------Objects----------");
         System.out.println(Objects.isNull(userDTO));
         System.out.println(Objects.nonNull(userDTO));
+        //判断对象地址相同或者内容相同，可以判断两个null对象相等
+        System.out.println(Objects.equals(userDTO2,userDTO3));
+        System.out.println(userDTO2.equals(userDTO3));
         System.out.println("----------StringUtils----------");
         System.out.println(StringUtils.isEmpty(" "));
         System.out.println(StringUtils.isBlank(" "));
@@ -348,7 +366,7 @@ public class UserController {
         System.out.println("----------BigDecimal转String----------");
         System.out.println(new BigDecimal("100.000").toString());
         System.out.println("----------BigDecimal转String去除多余0----------");
-        System.out.println(new BigDecimal("100.000").stripTrailingZeros().toString());
+        System.out.println(new BigDecimal("000100.000").stripTrailingZeros().toString());
         System.out.println("----------BigDecimal转String避免科学计数----------");
         System.out.println(new BigDecimal("100.000").stripTrailingZeros().toPlainString());
     }
