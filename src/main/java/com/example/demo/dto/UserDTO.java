@@ -22,7 +22,8 @@ import java.util.Date;
  * @version: 1$
  * @Data 相当于@Getter @Setter @RequiredArgsConstructor @ToString @EqualsAndHashCode这5个注解的合集。
  * @EqualsAndHashCode (callSuper = true) @ToString(callSuper = true)
- * 若使用@Data需注意如果不手动加callSuper = true，那么判等和tostring时都不会有父类属性参与
+ * 若使用@Data需注意如果不手动加callSuper = true，那么判等和tostring时都不会有父类属性参与,
+ * 比如id定义在父类，那么除了id都相同的两个不同对象，用equals时会返回true，除非单独加上@EqualsAndHashCode (callSuper = true) @ToString(callSuper = true)
  * @JsonInclude (value = JsonInclude.Include.NON_NULL) 属性值为null的不参与序列化
  * @TableName 实体类的类名和数据库表名不一致
  */
@@ -31,6 +32,9 @@ import java.util.Date;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class UserDTO implements Serializable {
 	private static final long serialVersionUID = 8675624927131711253L;
+	public static final String FIELD_USER_ID = "userId";
+	public static final String FIELD_USER_NAME = "userName";
+	public static final String FIELD_PASSWORD = "password";
 	/**
 	 * redis保存对象的时候要求对象是序列化的且要有一个空的构造器,除非自定义redis序列化方式
 	 * - 把对象转换为字节序列的过程称为对象的序列化。
