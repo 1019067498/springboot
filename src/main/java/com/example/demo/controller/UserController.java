@@ -251,8 +251,8 @@ public class UserController {
         System.out.println("----------sorted排序----------");
         List<UserDTO> result3 = userList.stream().sorted(Comparator.comparingInt(UserDTO::getUserId)).collect(Collectors.toList());
         List<UserDTO> result4 = userList.stream().sorted(Comparator.comparingInt(UserDTO::getUserId).reversed()).collect(Collectors.toList());
-        System.out.println("升序 " + result3);
-        System.out.println("降序 " + result4);
+        System.out.println("根据id升序 " + result3);
+        System.out.println("根据id降序 " + result4);
 
         System.out.println("----------sum求和----------");
         int result5 = userList.stream().mapToInt(UserDTO::getUserId).sum();
@@ -260,7 +260,8 @@ public class UserController {
 
         System.out.println("----------将字符串换成大写并用逗号拼接起来----------");
         List<String> stringList = Arrays.asList("USA", "Japan", "France", "Germany", "Italy", "U.K.","Canada");
-        String result6 = stringList.stream().map(x -> x.toUpperCase()).collect(Collectors.joining(", "));
+        //无参数是直接拼接，一个参数是间隔符拼接，三个参数是间隔符，前缀，后缀拼接
+        String result6 = stringList.stream().map(x -> x.toUpperCase()).collect(Collectors.joining(",","[","]"));
         System.out.println(result6);
 
         System.out.println("----------查询id最大的user----------");
@@ -338,6 +339,17 @@ public class UserController {
         System.out.println("----------CollectionUtils----------");
         System.out.println(CollectionUtils.isEmpty(userDTOList));
         System.out.println(CollectionUtils.isEmpty(stringSet));
+        //CollectionUtils.isEqualCollection
+        //ArrayUtils.isEquals
+        //以上方法比较的是的元素以及元素的个数，不要求顺序相同。
+        System.out.println("AB的交集");
+        System.out.println(CollectionUtils.intersection(listA,listB));
+        System.out.println("AB去重后的并集");
+        System.out.println(CollectionUtils.union(listA,listB));
+        System.out.println("A除去交集后的差集");
+        System.out.println(CollectionUtils.subtract(listA,listB));
+        System.out.println("并集除去交集后的补集");
+        System.out.println(CollectionUtils.disjunction(listA,listB));
         System.out.println("----------MapUtils----------");
         System.out.println(MapUtils.isNotEmpty(userDTOHashMap));
         System.out.println("----------Objects----------");
@@ -362,6 +374,7 @@ public class UserController {
         System.out.println("----------BigDecimal类测试----------");
         BigDecimal bigDecimal1 = new BigDecimal(10.100001);
         BigDecimal bigDecimal2 = new BigDecimal("10.100001");
+        //不同类型相同数值构造出来的BigDecimal可能不相等
         System.out.println(bigDecimal1.compareTo(bigDecimal2));
         System.out.println("----------BigDecimal转String----------");
         System.out.println(new BigDecimal("100.000").toString());
