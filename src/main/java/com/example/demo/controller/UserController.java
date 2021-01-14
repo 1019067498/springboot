@@ -2,22 +2,28 @@ package com.example.demo.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.example.demo.dto.UserDTO;
+import com.example.demo.dto.WmsDto;
 import com.example.demo.exception.UserNotExist;
 import com.example.demo.service.UserService;
+import com.example.demo.utils.BatchUtils;
 import com.example.demo.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.text.Collator;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.example.demo.utils.CommonUtils.nvl;
@@ -32,6 +38,12 @@ import static com.example.demo.utils.CommonUtils.nvl;
 @Slf4j
 @RequestMapping(value = "/user")
 public class UserController {
+    /**
+     * 弹性域字段
+     */
+    private static String[] attributeFields = new String[] { WmsDto.FIELD_ATTRIBUTE15, WmsDto.FIELD_ATTRIBUTE14, WmsDto.FIELD_ATTRIBUTE13, WmsDto.FIELD_ATTRIBUTE12, WmsDto.FIELD_ATTRIBUTE11, WmsDto.FIELD_ATTRIBUTE10, WmsDto.FIELD_ATTRIBUTE9, WmsDto.FIELD_ATTRIBUTE8, WmsDto.FIELD_ATTRIBUTE7, WmsDto.FIELD_ATTRIBUTE6, WmsDto.FIELD_ATTRIBUTE5, WmsDto.FIELD_ATTRIBUTE4, WmsDto.FIELD_ATTRIBUTE3, WmsDto.FIELD_ATTRIBUTE2, WmsDto.FIELD_ATTRIBUTE1};
+    private static String[] batchFields = new String[]{"orgCode", "produceDate","batchStatus"};
+
     @Resource
     UserService userService;
     @Resource
@@ -217,12 +229,17 @@ public class UserController {
     }
 
     @GetMapping("/lambda")
-    public  void testLambda(){
+    public void testLambda() throws ParseException {
         List<UserDTO> userList = new ArrayList<>();
         userList.add(new UserDTO(20,"张三","123"));
         userList.add(new UserDTO(10,"李四","456"));
         userList.add(new UserDTO(30, "王五","789"));
         userList.add(new UserDTO(30, "王五","147"));
+        System.out.println("----------------list直接使用sort排序，非stream的sorted------------------");
+        //list中对象某个属性是中文的排序暂不会处理
+        Comparator cmp = Collator.getInstance(java.util.Locale.CHINA);
+        userList.sort(Comparator.comparing(UserDTO::getUserId));
+        System.out.println(userList);
 
         System.out.println("----------forEach集合中内部迭代----------");
         userList.forEach(user -> System.out.println(user.toString()));
@@ -369,7 +386,18 @@ public class UserController {
         //只能判null不能判""字符串或者size=0的对象
         System.out.println("----------nvl判空----------");
         System.out.println(nvl(userDTO,"对象为空"));
-
+        String testString1 = "select * from 123 where id = # {id} and code = #{code} and name = #{name}";
+        //替换空格、制表符、换页符等空白字符
+        System.out.println(testString1.replaceAll("\\s*",""));
+        String rgex = "#\\{([^#]*)}";
+        List<String> list = new ArrayList<String>();
+        String[] str = {};
+        Pattern pattern = Pattern.compile(rgex);// 匹配的模式
+        Matcher m = pattern.matcher(testString1);
+        while (m.find()) {
+            list.add(m.group(1));
+        }
+        System.out.println(list);
 
         System.out.println("----------BigDecimal类测试----------");
         BigDecimal bigDecimal1 = new BigDecimal(10.100001);
@@ -382,6 +410,36 @@ public class UserController {
         System.out.println(new BigDecimal("000100.000").stripTrailingZeros().toString());
         System.out.println("----------BigDecimal转String避免科学计数----------");
         System.out.println(new BigDecimal("100.000").stripTrailingZeros().toPlainString());
+        System.out.println("12^13^".indexOf("^"));
+        System.out.println("12^13".substring(0,2));
+        System.out.println(" ".trim().equals(""));
+
+        BatchDto batchDto1 = new BatchDto();
+        BatchDto batchDto2 = new BatchDto();
+        String ans1 ="2011/01/01 12:13:14";
+        String ans2 ="2011/01/01 12:13:15";
+        SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY/MM/DD HH:mm:ss", Locale.CHINA);
+        Date date1 = dateFormat.parse(ans1);
+        Date date2 = dateFormat.parse(ans2);
+        batchDto1.setAttribute1(null);
+        batchDto1.setProduceDate(date1);
+        batchDto1.setBatchStatus("");
+        batchDto1.setOrgCode("2000");
+        batchDto2.setAttribute1(null);
+        batchDto2.setProduceDate(date1);
+        batchDto2.setBatchStatus(null);
+        batchDto2.setOrgCode("2000");
+        Map<String, String> map = new HashMap<>();
+        String[] includeFiled = ArrayUtils.addAll(attributeFields, batchFields);
+        String[] excludeFiled = new String[]{};
+        try {
+            map = BatchUtils.compareTwoObject(batchDto1, batchDto2, includeFiled, excludeFiled);
+        }catch (Exception e){
+            throw new UserNotExist(e.getMessage());
+        }
+        for (Map.Entry<String, String> cidStockEntry : map.entrySet()){
+            System.out.println(cidStockEntry.getKey());
+        }
     }
 
 }
