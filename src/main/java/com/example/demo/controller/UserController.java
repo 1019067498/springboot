@@ -25,6 +25,7 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.example.demo.utils.CommonUtils.nvl;
 
@@ -274,6 +275,21 @@ public class UserController {
         System.out.println("----------sum求和----------");
         int result5 = userList.stream().mapToInt(UserDTO::getUserId).sum();
         System.out.println(result5);
+        System.out.println("----------iterate迭代----------");
+        //seed是起始值，limit是循环次数
+        double result51 = Stream.iterate(1, i -> i * 2).limit(6).mapToInt(i -> i).summaryStatistics().getAverage();
+        Stream.iterate(0, n -> n + 1).filter(x -> x % 2 != 0).limit(10).forEach(x -> System.out.println(x));
+        //斐波那契
+        Stream.iterate(new int[]{0, 1}, n -> new int[]{n[1], n[0] + n[1]})
+                .limit(20)
+                .map(n -> n[0])
+                .forEach(x -> System.out.println(x));
+        //斐波那契求和
+        int result52 = Stream.iterate(new int[]{0, 1}, n -> new int[]{n[1], n[0] + n[1]})
+                .limit(10)
+                .map(n -> n[0]) // Stream<Integer>
+                .mapToInt(n -> n)
+                .sum();
 
         System.out.println("----------将字符串换成大写并用逗号拼接起来----------");
         List<String> stringList = Arrays.asList("USA", "Japan", "France", "Germany", "Italy", "U.K.","Canada");
